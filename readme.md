@@ -3,6 +3,8 @@ Pimms
 
 Boilerplate gulp setup for modern web projects, including support for [Browserify](http://broswerify.org/), [Polymer Web Components](http://www.polymer-project.org/), [BrowserSync](http://www.browsersync.io/), [Stylus](learnboost.github.io/stylus/), [Autoprefix CSS](https://github.com/ai/autoprefixer) and more!
 
+Version: 0.1.0
+
 Features
 --------
 
