@@ -1,5 +1,5 @@
 /*
- * Pimms Gulpfile - see readme.md for details
+ * Longsip Gulpfile - see readme.md for details
  */
 
 var autoprefixer = require('gulp-autoprefixer')

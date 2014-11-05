@@ -1,7 +1,7 @@
-Pimms
-=====
+Longsip
+=======
 
-Boilerplate gulp setup for modern web projects, including support for [Browserify](http://broswerify.org/), [Polymer Web Components](http://www.polymer-project.org/), [BrowserSync](http://www.browsersync.io/), [Stylus](learnboost.github.io/stylus/), [Autoprefix CSS](https://github.com/ai/autoprefixer) and more!
+A boilerplate Gulp setup for modern web frontends, including support for [Browserify](http://broswerify.org/), [Polymer Web Components](http://www.polymer-project.org/), [BrowserSync](http://www.browsersync.io/), [Stylus](learnboost.github.io/stylus/), [Autoprefix CSS](https://github.com/ai/autoprefixer) and more!
 
 Version: 0.1.0
 
@@ -62,23 +62,19 @@ then in `main.js` (or other `scripts/*.js` file): -
     var moment = require('../bower_components/moment/moment.js')
     console.log(moment().format('dddd'))
 
-###2. Why "Pimms"? WTF?
-
-[Pimm's](http://en.wikipedia.org/wiki/Pimms) is a popular English cocktail, often using a whole range of different ingredients. Since this project is based around a Gulp centre, think of this as an idiosyncratic collection of ingredients in one big tasty gulp! :)
-
-###3. Why Stylus? Why not Sass? It's much more popular!
+###2. Why Stylus? Why not Sass? It's much more popular!
 
 Because Stylus can do (*nearly*) everything Sass can but it saves adding **yet another** requirement/dependency (Ruby) to the build process. Also Stylus is significantly faster, which once your project grows and Sass is taking a couple of seconds to compile your styles every time you save really starts to make a difference. If you really want/need Sass support it isn't hard to add, there are a million tutorials on getting Sass setup with Gulp, just follow one and add a new `sass` task to  `gulpfile.js` et voila!
 
-###4. Why is `node_modules` over 120Mb?!
+###3. Why is `node_modules` over 120Mb?!
 
 Don't ask me, apparently the npm dependency chain for all the little text utilities that make up a modern web frontend build process take up over 120Mb! Yes, it shocked me too.
 
-###5. I already have a server, I want BrowserSync to use that!
+###4. I already have a server, I want BrowserSync to use that!
 
 Simply change `gulpfile.js` config for `config.BrowserSync.use` to `server`. Also make sure the details in `config.browserSync.serve.server` match your local server. All done. (NB: If you're using your own server you'll need to make sure the `/bower_components` directory is available for the loading of Polymer's components)
 
-###6. Add do I add a new Polymer Web Component?
+###5. Add do I add a new Polymer Web Component?
 
 Simply list the `<import>` in `public/components.html` and run `gulp` (or re-save the file if Gulp is already running). This will concatenate the component with all the other components and load them as a single import in index.html. **NB**: The individual Polymer Web Component needs to be already installed using bower, as per the Polymer documentation, this is usually of the form e.g. `bower install --save Polymer/core-elements`
 
@@ -96,4 +92,4 @@ Seriously, read it, otherwise trying to use Browserify without doing so is going
 Credits
 -------
 
-A lot of the early foundation of this Gulp setup was based on the excellent work done by [Dan Tello (greypants)](http://github.com/greypants) and his [gulp-starter](https://github.com/greypants/gulp-starter) project. Please check it out, it features a number of cool things not included in Pimms that might be useful for your project. Pimms arose out of a need for a default frontend build system that differed from the toolset that gulp-starter focuses on, in no way do I suggest that Pimms is better, simply a mutated cousin who wandered off in a slightly different direction :) Many, many thanks to Dan (and the other gulp-starter contributors) for all their hard work and sharing their efforts.
+A lot of the early foundation of this Gulp setup was based on the excellent work done by [Dan Tello (greypants)](http://github.com/greypants) and his [gulp-starter](https://github.com/greypants/gulp-starter) project. Please check it out, it features a number of cool things not included in Longsip that might be useful for your project. Longsip arose out of a need for a default frontend build system that differed from the toolset that gulp-starter focuses on, in no way do I suggest that Longsip is better, simply a mutated cousin who wandered off in a slightly different direction :) Many, many thanks to Dan (and the other gulp-starter contributors) for all their hard work and sharing their efforts.
