@@ -16,6 +16,7 @@ var rimraf = require('rimraf')
 var source = require('vinyl-source-stream')
 var streamify = require('gulp-streamify')
 var stylus = require('gulp-stylus')
+var to5ify = require('6to5ify')
 var uglify = require('gulp-uglify')
 var vulcanize = require('gulp-vulcanize')
 var watchify = require('watchify')
@@ -69,41 +70,46 @@ var config = {
 
 // Browserify
 gulp.task('browserify', function() {
-    var bundleMethod = config.isWatching ? watchify : browserify
-
-    var bundler = bundleMethod({
+    var bundler = browserify({
         // Specify the entry point of your app
         entries: [config.js.source + '/' + config.js.entryPoint],
         // Add file extentions to make optional in your requires
         extensions: [],
-        paths: ['./node_modules', config.js.source]
-    })
+        paths: ['./node_modules', config.js.source],
+        // the following are for Watchify
+        cache: {},
+        packageCache: {},
+        fullPaths: true,
+        // enable source maps!
+        debug: true
+    }).transform(to5ify)
 
     var bundle = function() {
         // Log when bundling starts
         bundleLogger.start()
         return bundler
-        // Enable source maps!
-        .bundle({ debug: true })
-        // Report compile errors
-        .on('error', handleError)
-        // Use vinyl-source-stream to make the
-        // stream gulp compatible. Specifiy the
-        // desired output filename here.
-        .pipe(source(config.js.output))
-        // Specify the output destination
-        .pipe(gulp.dest(config.js.build))
-        // rename the minifed version
-        .pipe(rename({ suffix: '.min' }))
-        // use streamify to allow uglify to work as a stream
-        .pipe(streamify(uglify()))
-        // output the minified version to build/
-        .pipe(gulp.dest(config.js.build))
-        // Log when bundling completes!
-        .on('end', bundleLogger.end)
+            .bundle()
+            // Report compile errors
+            .on('error', handleError)
+            // Use vinyl-source-stream to make the
+            // stream gulp compatible. Specifiy the
+            // desired output filename here.
+            .pipe(source(config.js.output))
+            // Specify the output destination
+            .pipe(gulp.dest(config.js.build))
+            // rename the minifed version
+            .pipe(rename({ suffix: '.min' }))
+            // use streamify to allow uglify to work as a stream
+            .pipe(streamify(uglify()))
+            // output the minified version to build/
+            .pipe(gulp.dest(config.js.build))
+            // Log when bundling completes!
+            .on('end', bundleLogger.end)
     }
 
     if (config.isWatching) {
+        // wrap browserify in watchify
+        bundler = watchify(bundler)
         // Rebundle with watchify on changes.
         bundler.on('update', bundle)
     }

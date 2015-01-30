@@ -1,13 +1,15 @@
 Longsip
 =======
 
-A boilerplate Gulp setup for modern web frontends, including support for [Browserify](http://broswerify.org/), [Polymer Web Components](http://www.polymer-project.org/), [BrowserSync](http://www.browsersync.io/), [Stylus](learnboost.github.io/stylus/), [Autoprefix CSS](https://github.com/ai/autoprefixer) and more!
+A boilerplate Gulp setup for modern web frontends, including support for [6to5](http://6to5.org), [Browserify](http://broswerify.org/), [Polymer Web Components](http://www.polymer-project.org/), [BrowserSync](http://www.browsersync.io/), [Stylus](learnboost.github.io/stylus/), [Autoprefix CSS](https://github.com/ai/autoprefixer) and more!
 
-Version: 0.1.0
+Version: 0.2.0
+Last Updated: 30-Jan-15
 
 Features
 --------
 
+* **[6to5](http://6to5.org/)** - *use next-gen ES6 javascript today, auto transpiles!*
 * **[Autoprefixer](https://github.com/ai/autoprefixer)** - *automatically add CSS vendor prefixes*
 * **[Bower](http://bower.io/)** - *frontend package manager*
 * **[BrowserSync](http://www.browsersync.io/)** - *live reloading and development file server*
@@ -88,6 +90,10 @@ The `bower_components` and `node_modules` directories are ignored from git by de
 ###2. Read the [Browserify Handbook](https://github.com/substack/browserify-handbook)
 
 Seriously, read it, otherwise trying to use Browserify without doing so is going to lead to much confusion.
+
+###3. Read the [6to5 "Learn ES6"](http://6to5.org/learn-es6) Guide
+
+Discover all the wonderful next-generation Javascript syntax you can start using right now!
 
 Credits
 -------
