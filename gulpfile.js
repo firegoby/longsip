@@ -3,12 +3,12 @@
  */
 
 var autoprefixer = require('gulp-autoprefixer')
-var browserSync = require('browser-sync')
+var babelify = require('babelify')
 var browserify = require('browserify')
+var browserSync = require('browser-sync')
+var cssnano = require('gulp-cssnano')
 var gulp = require('gulp')
 var gutil = require('gulp-util')
-var htmlmin = require('gulp-htmlmin')
-var minifycss = require('gulp-minify-css')
 var notify = require("gulp-notify")
 var prettyHrtime = require('pretty-hrtime')
 var rename = require('gulp-rename')
@@ -16,9 +16,7 @@ var rimraf = require('rimraf')
 var source = require('vinyl-source-stream')
 var streamify = require('gulp-streamify')
 var stylus = require('gulp-stylus')
-var to5ify = require('6to5ify')
 var uglify = require('gulp-uglify')
-var vulcanize = require('gulp-vulcanize')
 var watchify = require('watchify')
 
 // =================================================================== SETTINGS
@@ -33,10 +31,7 @@ var config = {
           server: {
               baseDir: './public',
               directory: false,
-              index: "index.html",
-              routes: {
-                  "/bower_components": "./bower_components"
-              }
+              index: "index.html"
           }
         },
         use: "server",
@@ -44,16 +39,6 @@ var config = {
     },
     build: 'public/build',
     isWatching: false,
-    polymer: {
-        htmlmin: {
-            collapseWhitespace: true,
-            minifyCSS: true,
-            minifyJS: true,
-            removeComments: true,
-            removeCommentsFromCDATA: true
-        },
-        manifest: './public/components.html'
-    },
     js: {
         source: './scripts',
         entryPoint: 'main.js',
@@ -61,7 +46,7 @@ var config = {
         output: 'bundle.js'
     },
     styles: {
-        watch: 'styles/**/*.styl',
+        watch: ['styles/**/*.styl'],
         compile: 'styles/*.styl'
     }
 }
@@ -70,26 +55,23 @@ var config = {
 
 // Browserify
 gulp.task('browserify', function() {
-    var bundler = browserify({
+    var props = {
         // Specify the entry point of your app
         entries: [config.js.source + '/' + config.js.entryPoint],
         // Add file extentions to make optional in your requires
         extensions: [],
-        paths: ['./node_modules', config.js.source],
-        // the following are for Watchify
         cache: {},
         packageCache: {},
-        fullPaths: true,
-        // enable source maps!
-        debug: true
-    }).transform(to5ify)
+        paths: ['./node_modules', config.js.source]
+    }
+
+    var bundler = config.isWatching ? watchify(browserify(props)) : browserify(props)
 
     var bundle = function() {
-        // Log when bundling starts
         bundleLogger.start()
         return bundler
+            .transform(babelify)
             .bundle()
-            // Report compile errors
             .on('error', handleError)
             // Use vinyl-source-stream to make the
             // stream gulp compatible. Specifiy the
@@ -103,13 +85,10 @@ gulp.task('browserify', function() {
             .pipe(streamify(uglify()))
             // output the minified version to build/
             .pipe(gulp.dest(config.js.build))
-            // Log when bundling completes!
             .on('end', bundleLogger.end)
     }
 
     if (config.isWatching) {
-        // wrap browserify in watchify
-        bundler = watchify(bundler)
         // Rebundle with watchify on changes.
         bundler.on('update', bundle)
     }
@@ -127,7 +106,7 @@ gulp.task('browserSync', ['build'], function() {
 })
 
 // Composite task of build types
-gulp.task('build', ['styles', 'browserify', 'vulcanize'])
+gulp.task('build', ['styles', 'browserify'])
 
 // Clean (delete) the entire build directory
 gulp.task('clean', function() {
@@ -146,31 +125,19 @@ gulp.task('styles', function() {
         .pipe(gulp.dest(config.build))
         .pipe(browserSync.reload({ stream: true }))
         .pipe(rename({ suffix: '.min' }))
-        .pipe(minifycss())
+        .pipe(cssnano())
         .pipe(gulp.dest(config.build))
 })
 
 // Watch files for changes
 gulp.task('watch', ['setWatch', 'browserSync'], function() {
     gulp.watch(config.styles.watch, ['styles'])
-    gulp.watch(config.polymer.manifest, ['vulcanize'])
 })
 
 // Set watch flag so Watchify is used rather than Browserify
 gulp.task('setWatch', function() {
     config.isWatching = true
 })
-
-// Vulcanize Polymer dependencies & minify HTML
-gulp.task('vulcanize', function () {
-    return gulp.src(config.polymer.manifest)
-        .pipe(vulcanize({dest: config.build}))
-        .pipe(rename({ suffix: '.min' }))
-        .pipe(htmlmin(config.polymer.htmlmin))
-        .pipe(gulp.dest(config.build))
-        .pipe(browserSync.reload({stream:true, once: true}))
-})
-
 
 // ==================================================================== HELPERS
 
